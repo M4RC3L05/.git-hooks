@@ -2,7 +2,7 @@
 
 set -e
 
-FILES=$(git diff --cached --name-only --diff-filter=ACMR "*.ts")
+FILES=$(git diff --cached --name-only --diff-filter=ACMR "*.ts" "*.tsx")
 
 if [ -n "$FILES" ]
 then
