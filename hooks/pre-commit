@@ -1,0 +1,38 @@
+#!/usr/bin/env sh
+
+set -e
+
+BASEDIR=$(dirname "$0")
+CONFIG_PATH="$(git rev-parse --show-toplevel)/.githooksrc"
+
+[ ! -f "$CONFIG_PATH" ] && (
+  echo ".githooksrc file not found in root of repo, create one and try agin"
+  exit 1
+)
+
+# shellcheck disable=SC1091
+. ./.githooksrc
+
+FILES=$(git diff --cached --name-only --diff-filter=ACMR ":(exclude).githooksrc")
+
+[ -z "$FILES" ] && exit 0
+
+split() {
+  IFS=$2
+
+  # shellcheck disable=2086
+  set -- $1
+
+  # Print each list value on its own line.
+  printf '%s\n' "$@"
+}
+
+# shellcheck disable=SC2086
+for i in $(split $HOOKS ","); do
+  echo "Running $i pre-commit"
+  (
+    set -x
+    /usr/bin/env sh "$BASEDIR"/"$i"/pre-commit
+  )
+  echo ""
+done
