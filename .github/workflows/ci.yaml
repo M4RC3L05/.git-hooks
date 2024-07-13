@@ -14,5 +14,12 @@ jobs:
           install: true
           cache: true
 
-      - name: run code checks
-        run: ./hooks/sh/pre-commit && ./hooks/yaml/pre-commit
+      - name: check lint
+        run: |
+          shellcheck $(shfmt -f hooks/)
+          yamllint .
+
+      - name: check format
+        run: |
+          shfmt -d .
+          yamlfmt -dry .
