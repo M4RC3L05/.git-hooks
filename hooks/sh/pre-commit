@@ -24,7 +24,7 @@ echo "=> Check code format..."
 (
   set -x
   # shellcheck disable=SC2086
-  shfmt -d -i 2 $FILES
+  shfmt -d $FILES
 )
 
 echo "=> Check code lint...."

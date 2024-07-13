@@ -2,7 +2,10 @@
 
 set -e
 
-command -v deno >/dev/null || echo "Deno is not installed"
+command -v deno >/dev/null || (
+  echo "deno is not installed"
+  exit 1
+)
 
 FORMAT_FILES=$(git diff --cached --name-only --diff-filter=ACMR "*.ts" "*.tsx" "*.js" "*.jsx" "*.md" "*.json" "*.jsonc" "*.markdown")
 LINT_FILES=$(git diff --cached --name-only --diff-filter=ACMR "*.ts" "*.tsx" "*.js" "*.jsx")
