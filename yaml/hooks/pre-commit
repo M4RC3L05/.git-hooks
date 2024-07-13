@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+
+set -e
+
+FILES=$(git diff --cached --name-only --diff-filter=ACMR "*.yaml" "*.yml")
+
+if [ -n "$FILES" ]
+then
+  echo "Check code format..."
+  echo -n "  => "
+  yamlfmt -dry $FILES
+
+  echo "Check code lint..."
+  echo -n "  => "
+  yamlfmt -lint $FILES
+fi
