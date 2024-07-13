@@ -1,0 +1,35 @@
+#!/usr/bin/env sh
+
+set -e
+
+command -v shfmt >/dev/null || (
+  echo "shfmt is not installed"
+  exit 1
+)
+command -v shellcheck >/dev/null || (
+  echo "shellcheck is not installed"
+  exit 1
+)
+
+FILES=$(git diff --cached --name-only --diff-filter=ACMR)
+
+[ -z "$FILES" ] && exit 0
+
+# shellcheck disable=SC2086
+FILES_TO_USE=$(shfmt -f $FILES)
+
+[ -z "$FILES_TO_USE" ] && exit 0
+
+echo "=> Check code format..."
+(
+  set -x
+  # shellcheck disable=SC2086
+  shfmt -d -i 2 $FILES
+)
+
+echo "=> Check code lint...."
+(
+  set -x
+  # shellcheck disable=SC2086
+  shellcheck $FILES
+)

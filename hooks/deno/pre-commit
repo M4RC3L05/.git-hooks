@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+
+set -e
+
+command -v deno >/dev/null || echo "Deno is not installed"
+
+FORMAT_FILES=$(git diff --cached --name-only --diff-filter=ACMR "*.ts" "*.tsx" "*.js" "*.jsx" "*.md" "*.json" "*.jsonc" "*.markdown")
+LINT_FILES=$(git diff --cached --name-only --diff-filter=ACMR "*.ts" "*.tsx" "*.js" "*.jsx")
+
+if [ -n "$FORMAT_FILES" ]; then
+  echo "=> Check code format..."
+  (
+    set -x
+    # shellcheck disable=SC2086
+    deno fmt --check $FORMAT_FILES
+  )
+fi
+
+if [ -n "$LINT_FILES" ]; then
+  echo "=> Check code lint..."
+  (
+    set -x
+    # shellcheck disable=SC2086
+    deno lint $LINT_FILES
+  )
+fi

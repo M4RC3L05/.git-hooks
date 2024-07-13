@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+
+set -e
+
+FILES=$(git diff --cached --name-only --diff-filter=ACMR "*.yaml" "*.yml")
+
+[ -z "$FILES" ] && exit 0
+
+echo "=> Check code format..."
+(
+  set -x
+  # shellcheck disable=SC2086
+  yamlfmt -dry $FILES
+)
+
+echo "=> Check code lint..."
+(
+  set -x
+  # shellcheck disable=SC2086
+  yamllint $FILES
+)
