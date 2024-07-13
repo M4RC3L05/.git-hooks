@@ -19,7 +19,7 @@ echo "=> Check code format..."
 (
   set -x
   # shellcheck disable=SC2086
-  yamlfmt -dry $FILES
+  yamlfmt -dry -lint $FILES
 )
 
 echo "=> Check code lint..."
