@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+
+set -e
+
+command -v sqlfluff >/dev/null || (
+  echo "sqlfluff is not installed"
+  exit 1
+)
+
+FILES=$(git diff --cached --name-only --diff-filter=ACMR "*.sql")
+
+[ -z "$FILES" ] && exit 0
+
+echo "=> Check code..."
+(
+  set -x
+  # shellcheck disable=SC2086
+  sqlfluff lint $FILES
+)
