@@ -20,6 +20,6 @@ jobs:
           yamllint .
 
       - name: check format
-        run: |
+        run: |-
           shfmt -d .
           yamlfmt -dry -lint .
