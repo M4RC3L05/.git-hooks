@@ -22,4 +22,4 @@ jobs:
       - name: check format
         run: |
           shfmt -d .
-          yamlfmt -dry .
+          yamlfmt -dry -lint .
