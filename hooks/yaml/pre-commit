@@ -5,7 +5,7 @@ set -e
 # shellcheck disable=SC1091
 . "$(dirname "$0")"/../_utils.sh
 
-ensure_command "sqlfluff"
+ensure_command "yamlfmt"
 ensure_command "yamllint"
 
 FILES=$(get_modified_files "*.yaml" "*.yml")
