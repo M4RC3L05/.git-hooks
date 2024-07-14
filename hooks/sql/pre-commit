@@ -2,12 +2,12 @@
 
 set -e
 
-command -v sqlfluff >/dev/null || (
-  echo "sqlfluff is not installed"
-  exit 1
-)
+# shellcheck disable=SC1091
+. "$(dirname "$0")"/../_utils.sh
 
-FILES=$(git diff --cached --name-only --diff-filter=ACMR "*.sql")
+ensure_command "sqlfluff"
+
+FILES=$(get_modified_files "*.sql")
 
 [ -z "$FILES" ] && exit 0
 

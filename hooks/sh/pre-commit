@@ -2,16 +2,13 @@
 
 set -e
 
-command -v shfmt >/dev/null || (
-  echo "shfmt is not installed"
-  exit 1
-)
-command -v shellcheck >/dev/null || (
-  echo "shellcheck is not installed"
-  exit 1
-)
+# shellcheck disable=SC1091
+. "$(dirname "$0")"/../_utils.sh
 
-FILES=$(git diff --cached --name-only --diff-filter=ACMR ":(exclude).githooksrc")
+ensure_command "shfmt"
+ensure_command "shellcheck"
+
+FILES=$(get_modified_files ":(exclude).githooksrc" ":(exclude).shellcheckrc")
 
 [ -z "$FILES" ] && exit 0
 

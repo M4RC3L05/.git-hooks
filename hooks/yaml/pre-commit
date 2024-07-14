@@ -2,16 +2,13 @@
 
 set -e
 
-command -v yamlfmt >/dev/null || (
-  echo "yamlfmt is not installed"
-  exit 1
-)
-command -v yamllint >/dev/null || (
-  echo "yamllint is not installed"
-  exit 1
-)
+# shellcheck disable=SC1091
+. "$(dirname "$0")"/../_utils.sh
 
-FILES=$(git diff --cached --name-only --diff-filter=ACMR "*.yaml" "*.yml")
+ensure_command "sqlfluff"
+ensure_command "yamllint"
+
+FILES=$(get_modified_files "*.yaml" "*.yml")
 
 [ -z "$FILES" ] && exit 0
 
