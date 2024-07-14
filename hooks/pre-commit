@@ -15,13 +15,19 @@ ensure_config
 FILES=$(get_modified_files ":(exclude).githooksrc")
 
 [ -z "$FILES" ] && exit 0
+[ -z "$HOOKS" ] && exit 0
 
 # shellcheck disable=SC2086
-for i in $(split $HOOKS ","); do
-  echo "Running $i pre-commit"
+for hook in $(split $HOOKS ","); do
+  if [ ! -d "$BASEDIR"/"$hook" ]; then
+    echo "Unknown $hook pre-commit"
+    continue
+  fi
+
+  echo "Running $hook pre-commit"
   (
     set -x
-    /usr/bin/env sh "$BASEDIR"/"$i"/pre-commit
+    /usr/bin/env sh "$BASEDIR"/"$hook"/pre-commit
   )
   echo ""
 done
