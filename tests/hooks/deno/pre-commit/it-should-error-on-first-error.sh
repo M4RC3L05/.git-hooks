@@ -6,7 +6,7 @@ set -e
 . "$TESTS_DIR"/setup.sh
 
 init_githooksrc "HOOKS=deno"
-touch foo.js foo.jsx foo.ts foo.tsx foo.json foo.jsonc foo.md foo.markdown foo.txt
+touch foo.js foo.jsx foo.ts foo.tsx foo.json foo.jsonc foo.md foo.markdown foo.txt foo.html foo.css
 
 git add .
 
