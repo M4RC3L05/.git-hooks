@@ -1,1 +1,1 @@
-HOOKS=yaml,sh
+HOOKS="yaml sh"

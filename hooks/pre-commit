@@ -18,7 +18,7 @@ FILES=$(get_modified_files ":(exclude).githooksrc")
 [ -z "$HOOKS" ] && exit 0
 
 # shellcheck disable=SC2086
-for hook in $(split $HOOKS ","); do
+for hook in $HOOKS; do
   if [ ! -d "$BASEDIR"/"$hook" ]; then
     echo "Unknown $hook pre-commit"
     continue

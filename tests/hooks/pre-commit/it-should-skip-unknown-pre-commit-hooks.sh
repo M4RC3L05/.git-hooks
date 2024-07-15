@@ -5,7 +5,7 @@ set -e
 # shellcheck disable=SC1091
 . "$TESTS_DIR"/setup.sh
 
-init_githooksrc "HOOKS=foo,deno,bar"
+init_githooksrc "HOOKS='foo deno bar'"
 touch foo.txt
 
 git add .

@@ -5,7 +5,7 @@ set -e
 # shellcheck disable=SC1091
 . "$TESTS_DIR"/setup.sh
 
-init_githooksrc "HOOKS=sql,deno,sh"
+init_githooksrc "HOOKS='sql deno sh'"
 touch foo.ts
 
 git add .
