@@ -21,9 +21,7 @@ is_same_calls_diff "$git_spy" "---
 ARGS:commit -m foo -q
 OUTPUT:Running yaml pre-commit
 + /usr/bin/env sh /app/hooks/yaml/pre-commit
-=> Check code format...
 + yamlfmt -dry -lint foo.yaml foo.yml
-=> Check code lint...
 + yamllint foo.yaml foo.yml
 EXIT_CODE:0
 "

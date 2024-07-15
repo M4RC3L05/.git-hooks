@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+#shellcheck disable=SC2086
 
 set -e
 
@@ -10,18 +11,8 @@ ensure_command "yamllint"
 
 FILES=$(get_modified_files "*.yaml" "*.yml")
 
-[ -z "$FILES" ] && exit 0
+# FORMAT
+run_if_not_empty "$FILES" run_and_print yamlfmt -dry -lint $FILES
 
-echo "=> Check code format..."
-(
-  set -x
-  # shellcheck disable=SC2086
-  yamlfmt -dry -lint $FILES
-)
-
-echo "=> Check code lint..."
-(
-  set -x
-  # shellcheck disable=SC2086
-  yamllint $FILES
-)
+# LINT
+run_if_not_empty "$FILES" run_and_print yamllint $FILES

@@ -19,7 +19,6 @@ is_same_calls_diff "$git_spy" "---
 ARGS:commit -m foo -q
 OUTPUT:Running sql pre-commit
 + /usr/bin/env sh /app/hooks/sql/pre-commit
-=> Check code...
 + sqlfluff lint foo.sql
 EXIT_CODE:0
 "

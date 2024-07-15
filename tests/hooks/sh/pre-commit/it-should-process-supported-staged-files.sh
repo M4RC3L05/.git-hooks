@@ -21,9 +21,7 @@ is_same_calls_diff "$git_spy" "---
 ARGS:commit -m foo -q
 OUTPUT:Running sh pre-commit
 + /usr/bin/env sh /app/hooks/sh/pre-commit
-=> Check code format...
 + shfmt -d foo.sh foo.sh
-=> Check code lint....
 + shellcheck foo.sh foo.sh
 EXIT_CODE:0
 "
