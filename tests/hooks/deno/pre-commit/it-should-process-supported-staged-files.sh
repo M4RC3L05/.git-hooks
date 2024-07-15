@@ -20,8 +20,8 @@ ARGS:commit -m foo -q
 OUTPUT:Running deno pre-commit
 + /usr/bin/env sh /app/hooks/deno/pre-commit
 + deno fmt --check foo.js foo.json foo.jsonc foo.jsx foo.markdown foo.md foo.ts foo.tsx
-+ deno run -A npm:prettier foo.html
-+ deno run -A npm:prettier foo.css
++ deno run -A npm:prettier -c foo.html
++ deno run -A npm:prettier -c foo.css
 + deno lint foo.js foo.jsx foo.ts foo.tsx
 + deno run -A npm:html-validate foo.html
 EXIT_CODE:0
@@ -29,9 +29,9 @@ EXIT_CODE:0
 is_same_calls_diff "$deno_mock" "---
 ARGS:fmt --check foo.js foo.json foo.jsonc foo.jsx foo.markdown foo.md foo.ts foo.tsx
 ---
-ARGS:run -A npm:prettier foo.html
+ARGS:run -A npm:prettier -c foo.html
 ---
-ARGS:run -A npm:prettier foo.css
+ARGS:run -A npm:prettier -c foo.css
 ---
 ARGS:lint foo.js foo.jsx foo.ts foo.tsx
 ---
