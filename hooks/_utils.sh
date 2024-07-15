@@ -19,3 +19,19 @@ get_modified_files() {
 get_config_path() {
   printf "%s" "$(git rev-parse --show-toplevel)"/.githooksrc
 }
+
+run_and_print() {
+  (
+    set -x
+    "$@"
+  )
+}
+
+run_if_not_empty() {
+  variable="$1"
+  shift
+
+  if [ -n "$variable" ]; then
+    "$@"
+  fi
+}

@@ -19,7 +19,6 @@ is_same_calls_diff "$git_spy" "---
 ARGS:commit -m foo -q
 OUTPUT:Running deno pre-commit
 + /usr/bin/env sh /app/hooks/deno/pre-commit
-=> Check code format...
 + deno fmt --check foo.js foo.json foo.jsonc foo.jsx foo.markdown foo.md foo.ts foo.tsx
 EXIT_CODE:1
 "

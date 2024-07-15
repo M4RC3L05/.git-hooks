@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+#shellcheck disable=SC2086
 
 set -e
 
@@ -7,23 +8,16 @@ set -e
 
 ensure_command "deno"
 
-FORMAT_FILES=$(get_modified_files "*.ts" "*.tsx" "*.js" "*.jsx" "*.md" "*.json" "*.jsonc" "*.markdown")
-LINT_FILES=$(get_modified_files "*.ts" "*.tsx" "*.js" "*.jsx")
+DENO_FORMAT_FILES="$(get_modified_files "*.ts" "*.tsx" "*.js" "*.jsx" "*.md" "*.json" "*.jsonc" "*.markdown")"
+DENO_LINT_FILES="$(get_modified_files "*.ts" "*.tsx" "*.js" "*.jsx")"
+HTML_FILES="$(get_modified_files "*.html")"
+CSS_FILES="$(get_modified_files "*.css")"
 
-if [ -n "$FORMAT_FILES" ]; then
-  echo "=> Check code format..."
-  (
-    set -x
-    # shellcheck disable=SC2086
-    deno fmt --check $FORMAT_FILES
-  )
-fi
+# FORMAT
+run_if_not_empty "$DENO_FORMAT_FILES" run_and_print deno fmt --check $DENO_FORMAT_FILES
+run_if_not_empty "$HTML_FILES" run_and_print deno run -A npm:prettier $HTML_FILES
+run_if_not_empty "$CSS_FILES" run_and_print deno run -A npm:prettier $CSS_FILES
 
-if [ -n "$LINT_FILES" ]; then
-  echo "=> Check code lint..."
-  (
-    set -x
-    # shellcheck disable=SC2086
-    deno lint $LINT_FILES
-  )
-fi
+# LINT
+run_if_not_empty "$DENO_LINT_FILES" run_and_print deno lint $DENO_LINT_FILES
+run_if_not_empty "$HTML_FILES" run_and_print deno run -A npm:html-validate $HTML_FILES

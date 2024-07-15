@@ -24,7 +24,6 @@ OUTPUT:Running sql pre-commit
 
 Running deno pre-commit
 + /usr/bin/env sh /app/hooks/deno/pre-commit
-=> Check code format...
 + deno fmt --check foo.ts
 EXIT_CODE:1
 "
