@@ -23,7 +23,7 @@ get_stderr_tmp_path() {
 
 execute_test() {
   echo "Running $1"
-  docker run --rm --init -v "$PWD"/hooks:/app/hooks:ro -v "$PWD"/tests:/app/tests:ro git-hooks-test:latest timeout 5s posh "$1"
+  docker run --rm --init -v "$PWD"/hooks:/app/hooks:ro -v "$PWD"/tests:/app/tests:ro git-hooks-test:latest timeout 5s sh "$1"
 }
 
 execute_test_bg() {
@@ -32,7 +32,7 @@ execute_test_bg() {
   tmp_stderr_path="$(get_stderr_tmp_path "$hash_path")"
 
   echo "Running $1"
-  docker run --rm --init -v "$PWD"/hooks:/app/hooks:ro -v "$PWD"/tests:/app/tests:ro git-hooks-test:latest timeout 5s posh "$1" >"$tmp_stdout_path" 2>"$tmp_stderr_path" &
+  docker run --rm --init -v "$PWD"/hooks:/app/hooks:ro -v "$PWD"/tests:/app/tests:ro git-hooks-test:latest timeout 5s sh "$1" >"$tmp_stdout_path" 2>"$tmp_stderr_path" &
 }
 
 find_tests() {

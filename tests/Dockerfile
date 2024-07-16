@@ -1,13 +1,12 @@
-FROM debian:latest
+FROM alpine:latest
 
 ENV HOOKS_DIR=/app/hooks
 ENV TESTS_DIR=/app/tests
 ENV PATH="$PATH:/app/.bin"
 
-RUN apt update && apt install -y git posh colordiff
+RUN apk add --no-cache git dash colordiff
 
-RUN chsh -s /usr/bin/posh
-RUN rm /bin/sh && ln -s /usr/bin/posh /bin/sh
+RUN rm /bin/sh && ln -s /usr/bin/dash /bin/sh
 
 WORKDIR /app
 
