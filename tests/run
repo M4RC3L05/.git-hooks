@@ -1,13 +1,29 @@
 #!/usr/bin/env sh
 
+TMP_DIR="$(mktemp -d)"
+
+exit_cleanup() {
+  set -x
+  rm -rf "$TMP_DIR"
+}
+
+trap exit_cleanup EXIT
+
 execute_test() {
   echo "Running $1"
   docker run --rm --init -v "$PWD"/hooks:/app/hooks:ro -v "$PWD"/tests:/app/tests:ro git-hooks-test:latest timeout 5s sh "$1"
 }
 
+hash() {
+  printf "%s" "$1" | md5sum
+}
+
 execute_test_bg() {
-  docker run --rm --init -v "$PWD"/hooks:/app/hooks:ro -v "$PWD"/tests:/app/tests:ro git-hooks-test:latest timeout 5s sh "$1" &
-  echo "[$!] Running $1"
+  tmp_stdout_path="$TMP_DIR"/"$(hash "$1").stdout"
+  tmp_stderr_path="$TMP_DIR"/"$(hash "$1").stderr"
+
+  echo "Running $1"
+  docker run --rm --init -v "$PWD"/hooks:/app/hooks:ro -v "$PWD"/tests:/app/tests:ro git-hooks-test:latest timeout 5s sh "$1" >"$tmp_stdout_path" 2>"$tmp_stderr_path" &
 }
 
 run_sync() {
@@ -24,26 +40,70 @@ run_sync() {
   fi
 }
 
+dump_file_if_exists() {
+  if [ -f "$1" ]; then
+    cat "$1"
+  fi
+}
+
 run_async() {
   pids=""
-  test_files=$(find "$1" -type f -name 'it-*.sh')
+  test_files="$(find "$1" -type f -name 'it-*.sh')"
 
   for file in $test_files; do
     execute_test_bg "$file"
 
-    pids="$pids $!"
+    pids="$pids $!::$file"
   done
 
-  for pid in $pids; do
-    wait "$pid"
-    exit_code="$?"
+  echo "---"
 
-    if [ $exit_code -eq 0 ]; then
-      echo "$pid passed"
-    else
-      echo "$pid failed ($exit_code)"
-      tests_failed=1
-    fi
+  IFS=" "
+  for pid in $pids; do
+    IFS="::"
+
+    str=""
+    i=0
+    exit_code=0
+
+    for seg in $pid; do
+      if [ $i -eq 0 ]; then
+        wait "$seg"
+        exit_code="$?"
+      elif [ $i -eq 1 ]; then
+        if [ -z "$seg" ]; then
+          continue
+        fi
+
+        str="$seg"
+
+        if [ $exit_code -eq 0 ]; then
+          str="$str passed"
+        else
+          str="$str failed ($exit_code)"
+          tests_failed=1
+        fi
+
+        stdout_path="$TMP_DIR"/"$(hash "$seg").stdout"
+        stderr_path="$TMP_DIR"/"$(hash "$seg").stderr"
+        stdout_contents="$(dump_file_if_exists "$stdout_path")"
+        stderr_contents="$(dump_file_if_exists "$stderr_path")"
+
+        if [ -n "$stdout_contents" ]; then
+          str="$str
+$stdout_contents"
+        fi
+
+        if [ -n "$stderr_contents" ]; then
+          str="$str
+$stderr_contents"
+        fi
+      fi
+
+      i=$((i + 1))
+    done
+
+    echo "$str"
   done
 
   # shellcheck disable=SC2086
