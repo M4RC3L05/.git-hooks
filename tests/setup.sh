@@ -89,5 +89,5 @@ is_same_calls_diff() {
 
   printf "%s" "$2" >"$_is_same_calls_diff_tmp"
 
-  diff -u "$1" "$_is_same_calls_diff_tmp" | colordiff -y
+  colordiff -u "$1" "$_is_same_calls_diff_tmp"
 }
