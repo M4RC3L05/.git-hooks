@@ -11,7 +11,7 @@ trap exit_cleanup EXIT
 
 execute_test() {
   echo "Running $1"
-  docker run --rm --init -v "$PWD"/hooks:/app/hooks:ro -v "$PWD"/tests:/app/tests:ro git-hooks-test:latest timeout 5s sh "$1"
+  docker run --rm --init -v "$PWD"/hooks:/app/hooks:ro -v "$PWD"/tests:/app/tests:ro git-hooks-test:latest timeout 5s posh "$1"
 }
 
 hash() {
@@ -23,7 +23,7 @@ execute_test_bg() {
   tmp_stderr_path="$TMP_DIR"/"$(hash "$1").stderr"
 
   echo "Running $1"
-  docker run --rm --init -v "$PWD"/hooks:/app/hooks:ro -v "$PWD"/tests:/app/tests:ro git-hooks-test:latest timeout 5s sh "$1" >"$tmp_stdout_path" 2>"$tmp_stderr_path" &
+  docker run --rm --init -v "$PWD"/hooks:/app/hooks:ro -v "$PWD"/tests:/app/tests:ro git-hooks-test:latest timeout 5s posh "$1" >"$tmp_stdout_path" 2>"$tmp_stderr_path" &
 }
 
 run_sync() {

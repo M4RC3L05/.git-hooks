@@ -1,22 +1,24 @@
-FROM alpine:latest
+FROM debian:latest
 
 ENV HOOKS_DIR=/app/hooks
 ENV TESTS_DIR=/app/tests
 ENV PATH="$PATH:/app/.bin"
 
-RUN apk add git delta bat tini
+RUN apt update && apt install -y git posh colordiff
 
-RUN git config --global init.defaultBranch main
-
-RUN git config --global user.email "foo@bar.com"
-RUN git config --global user.name "Foo Bar"
+RUN chsh -s /usr/bin/posh
+RUN rm /bin/sh && ln -s /usr/bin/posh /bin/sh
 
 WORKDIR /app
+
+RUN git config --global init.defaultBranch main
+RUN git config --global user.email "foo@bar.com"
+RUN git config --global user.name "Foo Bar"
 
 RUN mkdir .bin
 
 RUN git init
 
-RUN echo -e "hooks\ntests" >.gitignore
+RUN printf "hooks\ntests\n" >.gitignore
 
 RUN git add . && git commit -m "Add .gitignore"
