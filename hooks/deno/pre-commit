@@ -15,9 +15,9 @@ CSS_FILES="$(get_modified_files "*.css")"
 
 # FORMAT
 run_if_not_empty "$DENO_FORMAT_FILES" run_and_print deno fmt --check $DENO_FORMAT_FILES
-run_if_not_empty "$HTML_FILES" run_and_print deno run -A npm:prettier -c $HTML_FILES
-run_if_not_empty "$CSS_FILES" run_and_print deno run -A npm:prettier -c $CSS_FILES
+run_if_not_empty "$HTML_FILES" run_and_print deno run -A --no-lock npm:prettier -c $HTML_FILES
+run_if_not_empty "$CSS_FILES" run_and_print deno run -A --no-lock npm:prettier -c $CSS_FILES
 
 # LINT
 run_if_not_empty "$DENO_LINT_FILES" run_and_print deno lint $DENO_LINT_FILES
-run_if_not_empty "$HTML_FILES" run_and_print deno run -A npm:html-validate $HTML_FILES
+run_if_not_empty "$HTML_FILES" run_and_print deno run -A --no-lock npm:html-validate $HTML_FILES
