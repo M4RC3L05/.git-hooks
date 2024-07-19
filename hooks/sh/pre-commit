@@ -11,13 +11,42 @@ ensure_command "shellcheck"
 
 FILES=$(get_modified_files ":(exclude).githooksrc" ":(exclude).shellcheckrc")
 
+# THIS MUST BE NEW LINE SEPERATED SO WE CAN EXPAND WHEN PASSIN TO CMD BELLOW
+SHFMT_FLAGS="
+-p
+-d
+-i
+2
+-ci
+"
+SHELLCHECK_FLAGS="
+--extended-analysis=true
+--shell=sh
+"
+
 [ -z "$FILES" ] && exit 0
 
-# shellcheck disable=SC2086
+OLD_IFS=$IFS
+IFS="
+"
 FILES_TO_USE=$(shfmt -f $FILES)
+IFS=$OLD_IFS
 
 # FORMAT
-run_if_not_empty "$FILES_TO_USE" run_and_print shfmt -d $FILES_TO_USE
+if [ -n "$FILES_TO_USE" ]; then
+  (
+    IFS="
+"
+    run_and_print shfmt $SHFMT_FLAGS $FILES_TO_USE
+  )
+fi
+
 
 # LINT
-run_if_not_empty "$FILES_TO_USE" run_and_print shellcheck $FILES_TO_USE
+if [ -n "$FILES_TO_USE" ]; then
+  (
+    IFS="
+"
+    run_and_print shellcheck $SHELLCHECK_FLAGS $FILES_TO_USE
+  )
+fi

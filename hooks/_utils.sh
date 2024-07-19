@@ -22,12 +22,3 @@ run_and_print() {
     "$@"
   )
 }
-
-run_if_not_empty() {
-  variable="$1"
-  shift
-
-  if [ -n "$variable" ]; then
-    "$@"
-  fi
-}

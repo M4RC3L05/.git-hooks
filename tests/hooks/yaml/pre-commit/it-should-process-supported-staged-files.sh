@@ -21,13 +21,13 @@ is_same_calls_diff "$git_spy" "---
 ARGS:commit -m foo -q
 OUTPUT:Running yaml pre-commit
 + /usr/bin/env sh /app/hooks/yaml/pre-commit
-+ yamlfmt -dry -lint foo.yaml foo.yml
-+ yamllint foo.yaml foo.yml
++ yamlfmt -dry -lint -formatter indent=2,include_document_start=true,line_ending=lf,retain_line_breaks_single=true,scan_folded_as_literal=true,trim_trailing_whitespace=true,eof_newline=true foo.yaml foo.yml
++ yamllint --no-warnings -d default foo.yaml foo.yml
 EXIT_CODE:0
 "
 is_same_calls_diff "$yamlfmt_mock" "---
-ARGS:-dry -lint foo.yaml foo.yml
+ARGS:-dry -lint -formatter indent=2,include_document_start=true,line_ending=lf,retain_line_breaks_single=true,scan_folded_as_literal=true,trim_trailing_whitespace=true,eof_newline=true foo.yaml foo.yml
 "
 is_same_calls_diff "$yamllint_mock" "---
-ARGS:foo.yaml foo.yml
+ARGS:--no-warnings -d default foo.yaml foo.yml
 "

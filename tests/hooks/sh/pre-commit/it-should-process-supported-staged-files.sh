@@ -21,15 +21,15 @@ is_same_calls_diff "$git_spy" "---
 ARGS:commit -m foo -q
 OUTPUT:Running sh pre-commit
 + /usr/bin/env sh /app/hooks/sh/pre-commit
-+ shfmt -d foo.sh foo.sh
-+ shellcheck foo.sh foo.sh
++ shfmt -p -d -i 2 -ci foo.sh foo.sh
++ shellcheck --extended-analysis=true --shell=sh foo.sh foo.sh
 EXIT_CODE:0
 "
 is_same_calls_diff "$shfmt_mock" "---
 ARGS:-f foo.sh foo.txt
 ---
-ARGS:-d foo.sh foo.sh
+ARGS:-p -d -i 2 -ci foo.sh foo.sh
 "
 is_same_calls_diff "$shellcheck_mock" "---
-ARGS:foo.sh foo.sh
+ARGS:--extended-analysis=true --shell=sh foo.sh foo.sh
 "

@@ -11,4 +11,10 @@ ensure_command "sqlfluff"
 FILES=$(get_modified_files "*.sql")
 
 # FORMAT & LINT
-run_if_not_empty "$FILES" run_and_print sqlfluff lint $FILES
+if [ -n "$FILES" ]; then
+  (
+    IFS="
+"
+    run_and_print sqlfluff lint $FILES
+  )
+fi

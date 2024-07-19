@@ -19,9 +19,9 @@ is_same_calls_diff "$git_spy" "---
 ARGS:commit -m foo -q
 OUTPUT:Running deno pre-commit
 + /usr/bin/env sh /app/hooks/deno/pre-commit
-+ deno fmt --check foo.js foo.json foo.jsonc foo.jsx foo.markdown foo.md foo.ts foo.tsx
++ deno fmt --check --use-tabs=false --line-width=80 --indent-width=2 --single-quote=false --no-semicolons=false foo.js foo.json foo.jsonc foo.jsx foo.markdown foo.md foo.ts foo.tsx
 EXIT_CODE:1
 "
 is_same_calls_diff "$deno_mock" "---
-ARGS:fmt --check foo.js foo.json foo.jsonc foo.jsx foo.markdown foo.md foo.ts foo.tsx
+ARGS:fmt --check --use-tabs=false --line-width=80 --indent-width=2 --single-quote=false --no-semicolons=false foo.js foo.json foo.jsonc foo.jsx foo.markdown foo.md foo.ts foo.tsx
 "

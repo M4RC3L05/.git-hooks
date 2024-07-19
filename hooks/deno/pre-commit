@@ -13,11 +13,60 @@ DENO_LINT_FILES="$(get_modified_files "*.ts" "*.tsx" "*.js" "*.jsx")"
 HTML_FILES="$(get_modified_files "*.html")"
 CSS_FILES="$(get_modified_files "*.css")"
 
+DENO_FMT_FLAGS="
+--check
+--use-tabs=false
+--line-width=80
+--indent-width=2
+--single-quote=false
+--no-semicolons=false
+"
+DENO_LINT_FLAGS="
+--rules-tags=recommended
+--rules-include=no-console,no-throw-literal,verbatim-module-syntax,no-undef
+"
+PRETTIER_FLAGS="
+--end-of-line=lf
+--html-whitespace-sensitivity=css
+--print-width=80
+--prose-wrap=preserve
+--no-semi=false
+--single-quote=false
+--tab-width=2
+--trailing-comma=all
+--use-tabs=false
+"
+
 # FORMAT
-run_if_not_empty "$DENO_FORMAT_FILES" run_and_print deno fmt --check $DENO_FORMAT_FILES
-run_if_not_empty "$HTML_FILES" run_and_print deno run -A --no-lock npm:prettier -c $HTML_FILES
-run_if_not_empty "$CSS_FILES" run_and_print deno run -A --no-lock npm:prettier -c $CSS_FILES
+if [ -n "$DENO_FORMAT_FILES" ]; then
+  (
+    IFS="
+"
+    run_and_print deno fmt $DENO_FMT_FLAGS $DENO_FORMAT_FILES
+  )
+fi
+
+if [ -n "$HTML_FILES" ] || [ -n "$CSS_FILES" ]; then
+  (
+    IFS="
+"
+    run_and_print deno run -A --no-lock npm:prettier -c $PRETTIER_FLAGS $HTML_FILES $CSS_FILES
+  )
+fi
 
 # LINT
-run_if_not_empty "$DENO_LINT_FILES" run_and_print deno lint $DENO_LINT_FILES
-run_if_not_empty "$HTML_FILES" run_and_print deno run -A --no-lock npm:html-validate $HTML_FILES
+if [ -n "$DENO_LINT_FILES" ]; then
+  (
+    IFS="
+"
+    run_and_print deno lint $DENO_LINT_FLAGS $DENO_LINT_FILES
+  )
+fi
+
+if [ -n "$HTML_FILES" ]; then
+  (
+    IFS="
+"
+    run_and_print deno run -A --no-lock npm:html-validate --rule=RULE:SEVERITY $HTML_FILES
+  )
+fi

@@ -24,6 +24,6 @@ OUTPUT:Running sql pre-commit
 
 Running deno pre-commit
 + /usr/bin/env sh /app/hooks/deno/pre-commit
-+ deno fmt --check foo.ts
++ deno fmt --check --use-tabs=false --line-width=80 --indent-width=2 --single-quote=false --no-semicolons=false foo.ts
 EXIT_CODE:1
 "
