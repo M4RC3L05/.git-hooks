@@ -1,6 +1,5 @@
 FROM alpine:latest
 
-ENV HOOKS_DIR=/app/hooks
 ENV TESTS_DIR=/app/tests
 ENV PATH="$PATH:/app/.bin"
 
@@ -17,7 +16,8 @@ RUN git config --global user.name "Foo Bar"
 RUN mkdir .bin
 
 RUN git init
+RUN git config --local core.hooksPath "/app/hooks"
 
-RUN printf "hooks\ntests\n" >.gitignore
+RUN printf "hooks\ntests\n.bin\n" >.gitignore
 
 RUN git add . && git commit -m "Add .gitignore"
