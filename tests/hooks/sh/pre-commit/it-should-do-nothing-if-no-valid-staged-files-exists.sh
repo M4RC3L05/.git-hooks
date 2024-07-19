@@ -18,12 +18,20 @@ git_spy="$(spy_binary "git")"
 /app/.bin/git commit -m "foo" -q
 
 is_same_calls_diff "$git_spy" "---
-ARGS:commit -m foo -q
-OUTPUT:Running sh pre-commit
-+ /usr/bin/env sh /app/hooks/sh/pre-commit
-EXIT_CODE:0
+ARGS:
+commit
+-m
+foo
+-q
+OUTPUT:
+Running sh pre-commit
++ /app/hooks/sh/pre-commit
+EXIT_CODE:
+0
 "
 is_same_calls_diff "$shfmt_mock" "---
-ARGS:-f foo.txt
+ARGS:
+-f
+foo.txt
 "
 is_same_calls_diff "$shellcheck_mock" ""

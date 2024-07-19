@@ -27,7 +27,7 @@ for hook in $HOOKS; do
   echo "Running $hook pre-commit"
   (
     set -x
-    /usr/bin/env sh "$BASEDIR"/"$hook"/pre-commit
+    "$BASEDIR"/"$hook"/pre-commit
   )
   echo ""
 done

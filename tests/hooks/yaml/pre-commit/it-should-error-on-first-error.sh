@@ -18,13 +18,23 @@ git_spy="$(spy_binary "git")"
 /app/.bin/git commit -m "foo" -q
 
 is_same_calls_diff "$git_spy" "---
-ARGS:commit -m foo -q
-OUTPUT:Running yaml pre-commit
-+ /usr/bin/env sh /app/hooks/yaml/pre-commit
+ARGS:
+commit
+-m
+foo
+-q
+OUTPUT:
+Running yaml pre-commit
++ /app/hooks/yaml/pre-commit
 + yamlfmt -dry -lint foo.yaml foo.yml
-EXIT_CODE:1
+EXIT_CODE:
+1
 "
 is_same_calls_diff "$yamlfmt_mock" "---
-ARGS:-dry -lint foo.yaml foo.yml
+ARGS:
+-dry
+-lint
+foo.yaml
+foo.yml
 "
 is_same_calls_diff "$yamllint_mock" ""

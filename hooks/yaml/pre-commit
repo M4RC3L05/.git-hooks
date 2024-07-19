@@ -12,7 +12,19 @@ ensure_command "yamllint"
 FILES=$(get_modified_files "*.yaml" "*.yml")
 
 # FORMAT
-run_if_not_empty "$FILES" run_and_print yamlfmt -dry -lint $FILES
+if [ -n "$FILES" ]; then
+  (
+    IFS="
+"
+    run_and_print yamlfmt -dry -lint $FILES
+  )
+fi
 
 # LINT
-run_if_not_empty "$FILES" run_and_print yamllint $FILES
+if [ -n "$FILES" ]; then
+  (
+    IFS="
+"
+    run_and_print yamllint $FILES
+  )
+fi

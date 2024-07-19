@@ -6,7 +6,7 @@ set -e
 . "$TESTS_DIR"/setup.sh
 
 init_githooksrc "HOOKS=yaml"
-touch foo.yaml foo.yml foo.txt
+touch foo.yaml foo.yml foo.txt foo\ bar.yaml
 
 git add .
 
@@ -18,16 +18,30 @@ git_spy="$(spy_binary "git")"
 /app/.bin/git commit -m "foo" -q
 
 is_same_calls_diff "$git_spy" "---
-ARGS:commit -m foo -q
-OUTPUT:Running yaml pre-commit
-+ /usr/bin/env sh /app/hooks/yaml/pre-commit
-+ yamlfmt -dry -lint foo.yaml foo.yml
-+ yamllint foo.yaml foo.yml
-EXIT_CODE:0
+ARGS:
+commit
+-m
+foo
+-q
+OUTPUT:
+Running yaml pre-commit
++ /app/hooks/yaml/pre-commit
++ yamlfmt -dry -lint foo bar.yaml foo.yaml foo.yml
++ yamllint foo bar.yaml foo.yaml foo.yml
+EXIT_CODE:
+0
 "
 is_same_calls_diff "$yamlfmt_mock" "---
-ARGS:-dry -lint foo.yaml foo.yml
+ARGS:
+-dry
+-lint
+foo bar.yaml
+foo.yaml
+foo.yml
 "
 is_same_calls_diff "$yamllint_mock" "---
-ARGS:foo.yaml foo.yml
+ARGS:
+foo bar.yaml
+foo.yaml
+foo.yml
 "

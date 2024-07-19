@@ -6,7 +6,7 @@ set -e
 . "$TESTS_DIR"/setup.sh
 
 init_githooksrc "HOOKS=sql"
-touch foo.sql foo.txt
+touch foo.sql foo.txt foo\ bar.sql
 
 git add .
 
@@ -16,12 +16,21 @@ git_spy="$(spy_binary "git")"
 /app/.bin/git commit -m "foo" -q
 
 is_same_calls_diff "$git_spy" "---
-ARGS:commit -m foo -q
-OUTPUT:Running sql pre-commit
-+ /usr/bin/env sh /app/hooks/sql/pre-commit
-+ sqlfluff lint foo.sql
-EXIT_CODE:0
+ARGS:
+commit
+-m
+foo
+-q
+OUTPUT:
+Running sql pre-commit
++ /app/hooks/sql/pre-commit
++ sqlfluff lint foo bar.sql foo.sql
+EXIT_CODE:
+0
 "
 is_same_calls_diff "$sqlfluff_mock" "---
-ARGS:lint foo.sql
+ARGS:
+lint
+foo bar.sql
+foo.sql
 "

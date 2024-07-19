@@ -16,9 +16,15 @@ git_spy="$(spy_binary "git")"
 /app/.bin/git commit -m "foo" -q
 
 is_same_calls_diff "$git_spy" "---
-ARGS:commit -m foo -q
-OUTPUT:Running sql pre-commit
-+ /usr/bin/env sh /app/hooks/sql/pre-commit
-EXIT_CODE:0
+ARGS:
+commit
+-m
+foo
+-q
+OUTPUT:
+Running sql pre-commit
++ /app/hooks/sql/pre-commit
+EXIT_CODE:
+0
 "
 is_same_calls_diff "$sqlfluff_mock" ""

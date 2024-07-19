@@ -13,7 +13,13 @@ git_spy="$(spy_binary "git")"
 /app/.bin/git commit -m "foo" -q
 
 is_same_calls_diff "$git_spy" "---
-ARGS:commit -m foo -q
+ARGS:
+commit
+-m
+foo
+-q
 OUTPUT:
-EXIT_CODE:0
+
+EXIT_CODE:
+0
 "

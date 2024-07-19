@@ -18,12 +18,18 @@ git_spy="$(spy_binary "git")"
 /app/.bin/git commit -m "foo" -q
 
 is_same_calls_diff "$git_spy" "---
-ARGS:commit -m foo -q
-OUTPUT:Running sql pre-commit
-+ /usr/bin/env sh /app/hooks/sql/pre-commit
+ARGS:
+commit
+-m
+foo
+-q
+OUTPUT:
+Running sql pre-commit
++ /app/hooks/sql/pre-commit
 
 Running deno pre-commit
-+ /usr/bin/env sh /app/hooks/deno/pre-commit
++ /app/hooks/deno/pre-commit
 + deno fmt --check foo.ts
-EXIT_CODE:1
+EXIT_CODE:
+1
 "

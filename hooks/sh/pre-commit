@@ -13,11 +13,26 @@ FILES=$(get_modified_files ":(exclude).githooksrc" ":(exclude).shellcheckrc")
 
 [ -z "$FILES" ] && exit 0
 
-# shellcheck disable=SC2086
+OLD_IFS=$IFS
+IFS="
+"
 FILES_TO_USE=$(shfmt -f $FILES)
+IFS=$OLD_IFS
 
 # FORMAT
-run_if_not_empty "$FILES_TO_USE" run_and_print shfmt -d $FILES_TO_USE
+if [ -n "$FILES_TO_USE" ]; then
+  (
+    IFS="
+"
+    run_and_print shfmt -d $FILES_TO_USE
+  )
+fi
 
 # LINT
-run_if_not_empty "$FILES_TO_USE" run_and_print shellcheck $FILES_TO_USE
+if [ -n "$FILES_TO_USE" ]; then
+  (
+    IFS="
+"
+    run_and_print shellcheck $FILES_TO_USE
+  )
+fi

@@ -14,10 +14,35 @@ HTML_FILES="$(get_modified_files "*.html")"
 CSS_FILES="$(get_modified_files "*.css")"
 
 # FORMAT
-run_if_not_empty "$DENO_FORMAT_FILES" run_and_print deno fmt --check $DENO_FORMAT_FILES
-run_if_not_empty "$HTML_FILES" run_and_print deno run -A --no-lock npm:prettier -c $HTML_FILES
-run_if_not_empty "$CSS_FILES" run_and_print deno run -A --no-lock npm:prettier -c $CSS_FILES
+if [ -n "$DENO_FORMAT_FILES" ]; then
+  (
+    IFS="
+"
+    run_and_print deno fmt --check $DENO_FORMAT_FILES
+  )
+fi
+
+if [ -n "$HTML_FILES" ] || [ -n "$CSS_FILES" ]; then
+  (
+    IFS="
+"
+    run_and_print deno run -A --no-lock npm:prettier -c $HTML_FILES $CSS_FILES
+  )
+fi
 
 # LINT
-run_if_not_empty "$DENO_LINT_FILES" run_and_print deno lint $DENO_LINT_FILES
-run_if_not_empty "$HTML_FILES" run_and_print deno run -A --no-lock npm:html-validate $HTML_FILES
+if [ -n "$DENO_LINT_FILES" ]; then
+  (
+    IFS="
+"
+    run_and_print deno lint $DENO_LINT_FILES
+  )
+fi
+
+if [ -n "$HTML_FILES" ]; then
+  (
+    IFS="
+"
+    run_and_print deno run -A --no-lock npm:html-validate $HTML_FILES
+  )
+fi

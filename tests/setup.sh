@@ -1,13 +1,15 @@
 #!/usr/bin/env sh
 # shellcheck disable=SC2059
 
-git config --local core.hooksPath "$HOOKS_DIR"
-
 gen_mock_fn() {
   printf "#/usr/bin/env sh
 
 echo \"---\" >> $1
-echo \"ARGS:\$@\" >> $1
+echo \"ARGS:\" >> $1
+
+for arg in \"\$@\"; do
+  echo \"\$arg\" >> $1
+done
 
 $2
 "
@@ -17,7 +19,11 @@ gen_mock_once_fn() {
   printf "#/usr/bin/env sh
 
 echo \"---\" >> $1
-echo \"ARGS:\$@\" >> $1
+echo \"ARGS:\" >> $1
+
+for arg in \"\$@\"; do
+  echo \"\$arg\" >> $1
+done
 
 _counter=\"\$(cat $2)\"
 
@@ -69,12 +75,19 @@ spy_binary() {
 
   printf "#/usr/bin/env sh
 echo \"---\" >> $_spy_binary_tmp_path
-echo \"ARGS:\$@\" >> $_spy_binary_tmp_path
+echo \"ARGS:\" >> $_spy_binary_tmp_path
+
+for arg in \"\$@\"; do
+  echo \"\$arg\" >> $_spy_binary_tmp_path
+done
+
 _output=\"\$($1 \$@ 2>&1)\"
 _exit_code=\"\$?\"
 
-echo \"OUTPUT:\$_output\" >> $_spy_binary_tmp_path
-echo \"EXIT_CODE:\$_exit_code\" >> $_spy_binary_tmp_path
+echo \"OUTPUT:\" >> $_spy_binary_tmp_path
+echo \"\$_output\" >> $_spy_binary_tmp_path
+echo \"EXIT_CODE:\" >> $_spy_binary_tmp_path
+echo \"\$_exit_code\" >> $_spy_binary_tmp_path
 " >"$_spy_binary_spy_bin_path"
 
   printf "%s" "$_spy_binary_tmp_path"
@@ -89,5 +102,5 @@ is_same_calls_diff() {
 
   printf "%s" "$2" >"$_is_same_calls_diff_tmp"
 
-  colordiff -u "$1" "$_is_same_calls_diff_tmp"
+  colordiff -u "$_is_same_calls_diff_tmp" "$1"
 }
