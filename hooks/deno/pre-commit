@@ -12,6 +12,7 @@ DENO_FORMAT_FILES="$(get_modified_files "*.ts" "*.tsx" "*.js" "*.jsx" "*.md" "*.
 DENO_LINT_FILES="$(get_modified_files "*.ts" "*.tsx" "*.js" "*.jsx")"
 HTML_FILES="$(get_modified_files "*.html")"
 CSS_FILES="$(get_modified_files "*.css")"
+MD_FILES="$(get_modified_files "*.md" "*.mdx")"
 
 # FORMAT
 if [ -n "$DENO_FORMAT_FILES" ]; then
@@ -44,5 +45,13 @@ if [ -n "$HTML_FILES" ]; then
     IFS="
 "
     run_and_print deno run -A --no-lock npm:html-validate $HTML_FILES
+  )
+fi
+
+if [ -n "$MD_FILES" ]; then
+  (
+    IFS="
+"
+    run_and_print deno run -A --no-lock npm:markdownlint-cli2 $MD_FILES
   )
 fi

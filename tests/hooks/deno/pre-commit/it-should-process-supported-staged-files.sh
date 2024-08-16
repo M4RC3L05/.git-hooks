@@ -6,7 +6,7 @@ set -e
 . "$TESTS_DIR"/setup.sh
 
 init_githooksrc "HOOKS=deno"
-touch foo.js foo.jsx foo.ts foo.tsx foo.json foo.jsonc foo.md foo.markdown foo.txt foo.css foo.html foo\ bar.html
+touch foo.js foo.jsx foo.ts foo.tsx foo.json foo.jsonc foo.md foo.markdown foo.txt foo.css foo.html foo\ bar.html foo.md bar.mdx
 
 git add .
 
@@ -28,6 +28,7 @@ Running deno pre-commit
 + deno run -A --no-lock npm:prettier -c foo bar.html foo.html foo.css
 + deno lint foo.js foo.jsx foo.ts foo.tsx
 + deno run -A --no-lock npm:html-validate foo bar.html foo.html
++ deno run -A --no-lock npm:markdownlint-cli2 bar.mdx foo.md
 EXIT_CODE:
 0
 "
@@ -68,4 +69,12 @@ run
 npm:html-validate
 foo bar.html
 foo.html
+---
+ARGS:
+run
+-A
+--no-lock
+npm:markdownlint-cli2
+bar.mdx
+foo.md
 "
