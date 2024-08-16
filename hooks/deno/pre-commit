@@ -12,7 +12,7 @@ DENO_FORMAT_FILES="$(get_modified_files "*.ts" "*.tsx" "*.js" "*.jsx" "*.md" "*.
 DENO_LINT_FILES="$(get_modified_files "*.ts" "*.tsx" "*.js" "*.jsx")"
 HTML_FILES="$(get_modified_files "*.html")"
 CSS_FILES="$(get_modified_files "*.css")"
-MD_FILES="$(get_modified_files "*.md" "*.mdx")"
+MD_FILES="$(get_modified_files "*.md" "*.markdown")"
 
 # FORMAT
 if [ -n "$DENO_FORMAT_FILES" ]; then
