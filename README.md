@@ -1,7 +1,7 @@
 # Personal git hooks
 
-# Setup
+## Setup
 
-```cmd
+```sh
 git config --local core.hooksPath ./hooks
 ```

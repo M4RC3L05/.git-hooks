@@ -12,21 +12,16 @@ jobs:
       - name: clone repository
         uses: actions/checkout@v4
 
-      - name: setup tools
-        uses: jdx/mise-action@v2
+      - name: Install devbox
+        uses: jetify-com/devbox-install-action@v0.9.0
         with:
-          install: true
-          cache: true
-
-      - name: check lint
-        run: |
-          shellcheck $(shfmt -f hooks/ tests/)
-          yamllint .
+          enable-cache: "true"
 
       - name: check format
-        run: |-
-          shfmt -d .
-          yamlfmt -dry -lint .
+        run: devbox run check:format
+
+      - name: check lint
+        run: devbox run check:lint
 
       - name: build test image
         run: docker build -t git-hooks-test:latest . -f tests/Dockerfile

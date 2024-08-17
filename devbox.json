@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.12.0/.schema/devbox.schema.json",
+  "packages": [
+    "yamlfmt@latest",
+    "yamllint@latest",
+    "shfmt@latest",
+    "shellcheck@latest"
+  ],
+  "shell": {
+    "init_hook": [],
+    "scripts": {
+      "check:format": [
+        "set -x",
+        "shfmt -d $(shfmt -f hooks/ tests/)",
+        "yamlfmt -dry -lint ."
+      ],
+      "check:lint": [
+        "set -x",
+        "shellcheck $(shfmt -f hooks/ tests/)",
+        "yamllint ."
+      ]
+    }
+  }
+}
